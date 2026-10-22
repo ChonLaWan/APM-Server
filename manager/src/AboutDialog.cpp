@@ -4,11 +4,46 @@
 
 #include <QDesktopServices>
 #include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QPlainTextEdit>
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QPushButton>
 #include <QUrl>
 #include <QVBoxLayout>
+
+void AboutDialog::showLicense(Engine* engine)
+{
+    QDialog d(this);
+    d.setWindowTitle("APM License");
+    d.resize(640, 560);
+    auto* v = new QVBoxLayout(&d);
+    v->setContentsMargins(18, 16, 18, 14);
+    auto* text = new QPlainTextEdit;
+    text->setReadOnly(true);
+    QFile f(":/LICENSE.txt");   // embedded at build time: always available
+    text->setPlainText(f.open(QIODevice::ReadOnly) ? QString::fromUtf8(f.readAll()) : QString("LICENSE not embedded in this build."));
+    v->addWidget(text, 1);
+
+    auto* row = new QHBoxLayout;
+    const QString thirdParty = engine->path("licenses");
+    auto* tp = new QPushButton("Third-party licenses");
+    if (QFileInfo(thirdParty).isDir()) {
+        connect(tp, &QPushButton::clicked, &d, [thirdParty] { QDesktopServices::openUrl(QUrl::fromLocalFile(thirdParty)); });
+    } else {
+        tp->setEnabled(false);
+        tp->setToolTip("The licenses folder ships in the APM release zip");
+    }
+    row->addWidget(tp);
+    row->addStretch();
+    auto* close = new QPushButton("Close");
+    close->setObjectName("Primary");
+    connect(close, &QPushButton::clicked, &d, &QDialog::accept);
+    row->addWidget(close);
+    v->addLayout(row);
+    d.exec();
+}
 
 AboutDialog::AboutDialog(Engine* engine, QWidget* parent) : QDialog(parent)
 {
@@ -75,10 +110,8 @@ AboutDialog::AboutDialog(Engine* engine, QWidget* parent) : QDialog(parent)
     v->addWidget(lic);
 
     auto* buttons = new QHBoxLayout;
-    auto* licBtn = new QPushButton("Licenses");
-    connect(licBtn, &QPushButton::clicked, this, [engine] {
-        QDesktopServices::openUrl(QUrl::fromLocalFile(engine->path("licenses")));
-    });
+    auto* licBtn = new QPushButton("License");
+    connect(licBtn, &QPushButton::clicked, this, [this, engine] { showLicense(engine); });
     buttons->addWidget(licBtn);
     buttons->addStretch();
     auto* close = new QPushButton("Close");

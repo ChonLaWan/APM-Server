@@ -57,6 +57,11 @@ if (Test-Path "$Stage\manager\APMManager.exe") {
         Write-Host "[OK] manager -> $Target\manager"
     }
 }
+# licenses: APM's own LICENSE + the third-party licenses folder assembled by 95-package.ps1 (if built)
+Copy-Item "$Root\LICENSE" "$Target\LICENSE.txt" -Force
+$pkgLic = Get-ChildItem "$Root\dist\APM-*-win64\licenses" -Directory -ErrorAction SilentlyContinue | Select-Object -Last 1
+if ($pkgLic) { robocopy $pkgLic.FullName "$Target\licenses" /MIR /NFL /NDL /NJH /NJS /NP | Out-Null }
+else { Write-Host '[WARN] no dist\APM-*\licenses yet (run scripts\95-package.ps1) - licenses folder not installed' }
 # Apache conf data files (mime.types, magic ...) - copy, but never overwrite an edited httpd.conf
 New-Item -ItemType Directory -Force "$Target\apache\conf\extra", "$Target\apache\conf\vhosts" | Out-Null
 Get-ChildItem "$Stage\apache\conf" -File | Where-Object Name -ne 'httpd.conf' | Copy-Item -Destination "$Target\apache\conf" -Force

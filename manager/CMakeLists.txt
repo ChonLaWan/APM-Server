@@ -52,6 +52,9 @@ qt_add_executable(APMManager WIN32
 )
 
 qt_add_resources(APMManager "ui" PREFIX "/" BASE resources FILES resources/check.svg)
+# APM's own LICENSE embedded, so the About > License window works in any install
+set_source_files_properties(${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE PROPERTIES QT_RESOURCE_ALIAS LICENSE.txt)
+qt_add_resources(APMManager "license" PREFIX "/" FILES ${CMAKE_CURRENT_SOURCE_DIR}/../LICENSE)
 
 target_compile_definitions(APMManager PRIVATE
     UNICODE _UNICODE NOMINMAX WIN32_LEAN_AND_MEAN
