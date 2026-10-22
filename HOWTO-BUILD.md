@@ -1,6 +1,6 @@
 # คู่มือ build APM เองจาก source บน Windows
 
-[English](HOWTO-BUILD.en.md) · [README](README.th.md) · อ่านแบบเป็นตอนๆ บน LinuxThai: [Build APM บน Windows: สารบัญ](https://www.linuxthai.org/article/apm-build-windows-index)
+[English](HOWTO-BUILD.en.md) · [README](README.md#th) · อ่านแบบเป็นตอนๆ บน LinuxThai: [Build APM บน Windows: สารบัญ](https://www.linuxthai.org/article/apm-build-windows-index)
 
 พอดีต้อง build ทั้งชุดใหม่ตั้งแต่ศูนย์อยู่หลายรอบ ผมเลยจดทุกขั้นไว้ตรงนี้ เผื่อใครอยากคอมไพล์เองบ้าง หรือเอาไปทำต่อ ทุกคำสั่งในหน้านี้ผมรันจริงบนเครื่องตัวเองแล้ว ผลลัพธ์ที่แปะไว้ก็คัดมาจากหน้าจอจริง เครื่องที่ใช้เป็น Windows 11 x64, i5-12500H 16 threads, RAM 32GB (ทำเมื่อ 22 ต.ค. 2026) ใครเครื่องเล็กกว่านี้ก็ทำได้ แค่รอนานหน่อย
 
