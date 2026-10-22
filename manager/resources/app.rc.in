@@ -1,0 +1,31 @@
+#include <winver.h>
+
+IDI_ICON1 ICON "@CMAKE_CURRENT_SOURCE_DIR@/resources/apm.ico"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION    @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,@APM_BUILD@
+ PRODUCTVERSION @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,@APM_BUILD@
+ FILEFLAGSMASK  VS_FFI_FILEFLAGSMASK
+ FILEOS         VOS_NT_WINDOWS32
+ FILETYPE       VFT_APP
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName",      "ChonLaWan (wanpean.com)"
+            VALUE "FileDescription",  "APM Manager - Apache, PHP and MariaDB for Windows"
+            VALUE "FileVersion",      "@PROJECT_VERSION@ build @APM_BUILD@ (@APM_COMMIT@, @APM_BUILD_DATE@)"
+            VALUE "InternalName",     "APMManager"
+            VALUE "LegalCopyright",   "(c) 2026 ChonLaWan <wanpean@gmail.com> - MIT + Commons Clause"
+            VALUE "OriginalFilename", "APMManager.exe"
+            VALUE "ProductName",      "APM"
+            VALUE "ProductVersion",   "@PROJECT_VERSION@.@APM_BUILD@"
+            VALUE "Comments",         "https://wanpean.com  -  https://github.com/ChonLaWan/APM-Server"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0409, 1200
+    END
+END

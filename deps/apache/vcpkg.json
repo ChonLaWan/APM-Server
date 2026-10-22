@@ -1,0 +1,16 @@
+{
+  "name": "apm-apache-deps",
+  "version-string": "1",
+  "builtin-baseline": "bd8298ae219367a606c74c6c25dc50cc6d66eca8",
+  "dependencies": [
+    "openssl",
+    "pcre2",
+    "zlib",
+    "nghttp2",
+    "brotli",
+    "expat",
+    "libxml2",
+    "jansson",
+    "curl"
+  ]
+}

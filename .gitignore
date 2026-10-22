@@ -1,0 +1,23 @@
+# build outputs and downloaded third-party trees (root only - manager/src is source code)
+/toolchain/
+/src/
+/build/
+/stage/
+/dist/
+/downloads/
+*.log
+.vscode/
+
+# never commit: private notes, local leak-term list, machine state, secrets
+/private/
+apm.json
+.env
+.env.*
+*.key
+*.pfx
+*.p12
+*.sql
+*.sql.gz
+*.dump
+id_*
+!templates/**

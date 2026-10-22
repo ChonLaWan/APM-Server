@@ -1,0 +1,78 @@
+# Build the whole APM stack from source on a Windows runner and publish the portable zip as a release.
+#   - push a tag v*  -> build + GitHub Release with APM-<ver>-win64.zip (+ .sha256)
+#   - manual run     -> build + workflow artifact only (no release)
+# A cold build takes roughly 3-4 hours on a hosted runner (vcpkg, ImageMagick and MariaDB dominate);
+# the vcpkg binary cache and the ImageMagick checkout are cached between runs.
+name: release
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-2022
+    timeout-minutes: 350
+    env:
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}\vcpkg-binary-cache
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: '6.8.3'
+          arch: win64_msvc2022_64
+          cache: true
+
+      - name: Cache vcpkg binaries
+        uses: actions/cache@v4
+        with:
+          path: vcpkg-binary-cache
+          key: vcpkg-${{ hashFiles('deps/apache/vcpkg.json', 'ports-overlay/**') }}
+
+      - name: Prepare
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force "$env:VCPKG_DEFAULT_BINARY_CACHE" | Out-Null
+
+      - name: Build (fetch -> package)
+        shell: pwsh
+        env:
+          QT_DIR: ${{ env.QT_ROOT_DIR }}
+        run: ./scripts/build-all.ps1
+
+      - name: Smoke test the package
+        shell: pwsh
+        run: |
+          $zip = Get-ChildItem dist\APM-*-win64.zip | Select-Object -First 1
+          Expand-Archive $zip.FullName -DestinationPath "$env:RUNNER_TEMP\apm test"
+          $root = Get-ChildItem "$env:RUNNER_TEMP\apm test" -Directory | Select-Object -First 1
+          $m = Join-Path $root.FullName 'manager\APMManager.exe'
+          cmd /c "`"$m`" --setup --http 8081 --https 8444 --db 3308 > setup.txt 2>&1"; Get-Content setup.txt
+          if ($LASTEXITCODE) { throw 'setup failed' }
+          cmd /c "`"$m`" --cli start > start.txt 2>&1"; Get-Content start.txt
+          if ($LASTEXITCODE) { throw 'start failed' }
+          $page = curl.exe -s http://localhost:8081/
+          if ($page -notmatch 'MariaDB</td><td><code>\d') { throw 'site did not answer with PHP + MariaDB' }
+          cmd /c "`"$m`" --cli stop > stop.txt 2>&1"; Get-Content stop.txt
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: apm-win64
+          path: |
+            dist/APM-*-win64.zip
+            dist/APM-*-win64.zip.sha256
+
+      - name: Publish release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/APM-*-win64.zip
+            dist/APM-*-win64.zip.sha256
+          generate_release_notes: true

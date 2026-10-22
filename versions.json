@@ -1,0 +1,26 @@
+{
+  "apm_version": "1.0.0",
+  "_comment": "Pinned sources for APM. sha256=null -> 00-fetch.ps1 computes it on first download and records it in versions.lock.json (trust-on-first-use).",
+  "toolchain": {
+    "php-sdk":       { "version": "2.8.4",   "url": "https://github.com/php/php-sdk-binary-tools/archive/refs/tags/php-sdk-2.8.4.zip", "sha256": null, "dest": "toolchain/php-sdk", "strip": 1 },
+    "strawberry":    { "version": "5.42.3.1","url": "https://github.com/StrawberryPerl/Perl-Dist-Strawberry/releases/download/SP_54231_64bit/strawberry-perl-5.42.3.1-64bit-portable.zip", "sha256": null, "dest": "toolchain/strawberry", "strip": 0 },
+    "nasm":          { "version": "3.01",    "url": "https://www.nasm.us/pub/nasm/releasebuilds/3.01/win64/nasm-3.01-win64.zip", "sha256": null, "dest": "toolchain/nasm", "strip": 1 },
+    "winflexbison":  { "version": "2.5.25",  "url": "https://github.com/lexxmark/winflexbison/releases/download/v2.5.25/win_flex_bison-2.5.25.zip", "sha256": null, "dest": "toolchain/winflexbison", "strip": 0 }
+  },
+  "sources": {
+    "php":       { "version": "8.4.27", "url": "https://www.php.net/distributions/php-8.4.27.tar.xz", "sha256": "dcf93923b0e38e0d5252b25b796520b5a47761a08b3488b6d0b5d1115764d3f0" },
+    "httpd":     { "version": "2.4.69", "url": "https://downloads.apache.org/httpd/httpd-2.4.69.tar.bz2", "sha256": "c5e6ebc66e349b87d7fc6916ae7cc2a808ed348003de134cf9e9d89d3e2cc73d" },
+    "apr":       { "version": "1.7.6",  "url": "https://downloads.apache.org/apr/apr-1.7.6.tar.bz2", "sha256": "49030d92d2575da735791b496dc322f3ce5cff9494779ba8cc28c7f46c5deb32" },
+    "apr-util":  { "version": "1.6.5",  "url": "https://downloads.apache.org/apr/apr-util-1.6.5.tar.bz2", "sha256": "96de1dd6f6a0476d2d2e7964926d8c1ddc3bb0e210e1b1812d3ba5a454a392e2" },
+    "mod_fcgid": { "version": "2.3.9",  "url": "https://archive.apache.org/dist/httpd/mod_fcgid/mod_fcgid-2.3.9.tar.bz2", "sha256": null, "sha1": "f0b6d87dfcfe18b318905a3f91274051f3f17945" },
+    "mariadb":   { "version": "11.8.9", "url": "https://archive.mariadb.org/mariadb-11.8.9/source/mariadb-11.8.9.tar.gz", "sha256": "2e015b7e91004142eda8b3a20d3ceb875cf2ae55e72603e7222cd497d4e56fc6" },
+    "pecl-redis":    { "version": "6.3.0", "url": "https://pecl.php.net/get/redis-6.3.0.tgz", "sha256": null },
+    "pecl-igbinary": { "version": "3.2.16","url": "https://pecl.php.net/get/igbinary-3.2.16.tgz", "sha256": null },
+    "pecl-imagick":  { "version": "3.8.1", "url": "https://pecl.php.net/get/imagick-3.8.1.tgz", "sha256": null },
+    "imagemagick":   { "version": "7.1.2-34", "url": null, "sha256": null, "_comment": "git tag, built by scripts/25-imagemagick.ps1 via github.com/ImageMagick/Windows" }
+  },
+  "php_deps_series": "8.4",
+  "vs_toolset": "vs17",
+  "arch": "x64"
+}
+

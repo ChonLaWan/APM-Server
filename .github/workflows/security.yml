@@ -1,0 +1,31 @@
+# Secret scanning on every push / pull request: gitleaks over the whole history + APM's own rules.
+name: security
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  leaks:
+    runs-on: windows-2022
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: APM leak rules (keys, tokens, passwords, personal paths)
+        shell: pwsh
+        run: ./scripts/check-leaks.ps1 -All
+
+  gitleaks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
