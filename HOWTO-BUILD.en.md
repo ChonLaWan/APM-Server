@@ -483,6 +483,7 @@ Special cases:
 | port numbers shown in Thai digits | Qt follows the Thai Windows locale | `QLocale::setDefault(English)` |
 | `.gitignore` entry `src/` hid `manager/src` | the pattern matches any `src` folder | anchored to the root: `/src/` |
 | `Start-Process ... --cli start -Wait` never returns (test harness) | PowerShell 7 `-Wait` waits for the whole process tree | test via `cmd /c "... > out.txt"` |
+| every PHP page 500s (`End of script output before headers`); `php-cgi -v` says `Opcode handlers are unusable due to ASLR` | two APM folders running at once share one OPcache segment name (same build, same user) | per-folder `opcache.cache_id` + `opcache.file_cache` with `file_cache_fallback` |
 | relocated folder starts with config pointing at the old path | config is rendered with absolute paths | `apm.json` records the root; Manager re-renders, `--cli` refuses until `--setup` |
 
 ---

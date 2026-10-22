@@ -67,12 +67,15 @@ New-Item -ItemType Directory -Force "$Target\apache\conf\extra", "$Target\apache
 Get-ChildItem "$Stage\apache\conf" -File | Where-Object Name -ne 'httpd.conf' | Copy-Item -Destination "$Target\apache\conf" -Force
 
 # 2. runtime folders
-foreach ($d in 'www\default','logs\apache','logs\php','logs\mariadb','tmp\sessions','tmp\uploads','ssl','data') {
+foreach ($d in 'www\default','logs\apache','logs\php','logs\mariadb','tmp\sessions','tmp\uploads','tmp\opcache','ssl','data') {
     New-Item -ItemType Directory -Force "$Target\$d" | Out-Null
 }
 
 # 3. config from templates (only if missing, or -ResetConfig)
-$vars = @{ APM_ROOT = ($Target -replace '\\','/'); HTTP_PORT = $HttpPort; HTTPS_PORT = $HttpsPort; DB_PORT = $DbPort; BIND = $Bind }
+# CACHE_ID: per-folder OPcache segment name, same formula as the manager (Setup.cpp cacheId)
+$sha1 = [Security.Cryptography.SHA1]::Create().ComputeHash([Text.Encoding]::UTF8.GetBytes(($Target -replace '\\','/').ToLower()))
+$cacheId = 'apm' + (-join ($sha1[0..3] | ForEach-Object { $_.ToString('x2') }))
+$vars = @{ APM_ROOT = ($Target -replace '\\','/'); HTTP_PORT = $HttpPort; HTTPS_PORT = $HttpsPort; DB_PORT = $DbPort; BIND = $Bind; CACHE_ID = $cacheId }
 function Render($tpl, $dest, [switch]$WinPaths) {
     if ((Test-Path $dest) -and -not $ResetConfig) { Write-Host "[KEEP] $dest"; return }
     $t = Get-Content "$Root\templates\$tpl" -Raw

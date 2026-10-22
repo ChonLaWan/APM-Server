@@ -1,6 +1,7 @@
 #include "Setup.h"
 #include "Win.h"
 
+#include <QCryptographicHash>
 #include <QDateTime>
 #include <QDir>
 #include <QFile>
@@ -32,6 +33,12 @@ bool writeText(const QString& f, const QString& text)
     return true;
 }
 
+// OPcache segment name per APM folder (see templates/php.ini): "apm" + 8 hex of the folder path
+QString cacheId(const QString& root)
+{
+    return "apm" + QString::fromLatin1(QCryptographicHash::hash(root.toLower().toUtf8(), QCryptographicHash::Sha1).toHex().left(8));
+}
+
 bool render(const ApmConfig& c, const QString& tpl, const QString& dest, bool winPaths, bool reset, QStringList* log)
 {
     if (QFileInfo::exists(dest) && !reset) {
@@ -48,6 +55,7 @@ bool render(const ApmConfig& c, const QString& tpl, const QString& dest, bool wi
     t.replace("{{HTTPS_PORT}}", QString::number(c.httpsPort));
     t.replace("{{DB_PORT}}", QString::number(c.dbPort));
     t.replace("{{BIND}}", c.lan ? "0.0.0.0" : "127.0.0.1");
+    t.replace("{{CACHE_ID}}", cacheId(c.root));
     if (!writeText(dest, t)) {
         *log << "[ERR] cannot write " + QDir::toNativeSeparators(dest);
         return false;
@@ -152,7 +160,7 @@ ApmConfig suggest(const QString& root)
 bool run(const ApmConfig& c, bool resetConfig, QStringList* log)
 {
     const QString r = c.root;
-    for (const char* d : {"www/default", "logs/apache", "logs/php", "logs/mariadb", "tmp/sessions", "tmp/uploads", "ssl", "data"})
+    for (const char* d : {"www/default", "logs/apache", "logs/php", "logs/mariadb", "tmp/sessions", "tmp/uploads", "tmp/opcache", "ssl", "data"})
         QDir().mkpath(r + "/" + d);
 
     const bool moved = wasMoved(r);

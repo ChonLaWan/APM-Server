@@ -456,6 +456,7 @@ pwsh -File scripts\set-path.ps1 [-Scope User]          :: ใส่ php กั�
 23. ช่องพอร์ตใน UI ขึ้นเป็นเลขไทย ๘๐ เพราะ Qt ใช้ locale ไทยของ Windows ตั้งให้เป็นเลขอารบิกแล้ว
 24. .gitignore ที่เขียนว่า src/ ไปซ่อน manager/src ด้วย ต้องเขียนเป็น /src/ ให้จับเฉพาะ root
 25. ทดสอบด้วย `Start-Process ... -Wait` แล้วค้าง เพราะ -Wait ของ PowerShell 7 รอทั้งต้นไม้ process รวม httpd/mariadbd ที่ start ขึ้นมา ตัว manager ไม่ได้ผิด เวลาทดสอบให้ใช้ `cmd /c "... > out.txt"` แทน
+27. เปิด APM สองโฟลเดอร์พร้อมกันแล้วทุกหน้า PHP ขึ้น 500 (End of script output before headers) ลองสั่ง php-cgi -v ดูจะเจอ Opcode handlers are unusable due to ASLR สาเหตุคือบน Windows ตัว OPcache แชร์หน่วยความจำกันตามชื่อ พอ build เดียวกัน user เดียวกัน สองโฟลเดอร์เลยไปแย่งก้อนเดียวกัน แก้โดยตั้ง opcache.cache_id แยกตามโฟลเดอร์ และเปิด opcache.file_cache พร้อม file_cache_fallback ไว้สำรอง เจอตอนทดสอบ zip ขณะที่ C:\APM ยังรันอยู่ ถ้าไม่ลองรันคู่กันคงไม่เจอแน่ๆ
 26. ย้ายโฟลเดอร์แล้ว server ไปอ่าน config ที่ชี้ path เก่า ตอนนี้ apm.json จด root ไว้ Manager เทียบให้ทุกครั้ง ส่วน --cli จะไม่ยอมทำงานจนกว่าจะ --setup
 
 ---
