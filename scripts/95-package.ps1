@@ -30,7 +30,8 @@ Copy-Tree "$Stage\manager" "$Out\manager"
 Copy-Tree "$Root\templates" "$Out\templates"
 Copy-Tree "$Root\tools"     "$Out\tools"
 Copy-Item "$Root\versions.json" $Out
-Write-Host '[OK] engines, manager, templates, tools'
+Copy-Item "$Root\LICENSE" "$Out\LICENSE.txt"   # APM's own terms (MIT + Commons Clause) travel with the zip
+Write-Host '[OK] engines, manager, templates, tools, LICENSE'
 
 # 2. Mozilla CA bundle for PHP curl/openssl (sha256-checked)
 New-Item -ItemType Directory -Force "$Out\ssl" | Out-Null
