@@ -1,6 +1,6 @@
 # How to build APM from source on Windows
 
-[ภาษาไทย](HOWTO-BUILD.md) · [README](README.md)
+[ภาษาไทย](HOWTO-BUILD.md) · [README](README.md) · Thai article series on LinuxThai: [Build APM on Windows](https://www.linuxthai.org/article/apm-build-windows-index)
 
 This guide rebuilds the whole APM stack from upstream source on a Windows x64 PC. It covers Apache httpd 2.4, PHP 8.4 NTS with redis/igbinary/imagick, MariaDB 11.8, ImageMagick 7, every third-party library, and the APM Manager (Qt 6). The result is a portable zip. Each step shows the exact command and the output it really produced on the build machine (2026-10-22, Windows 11 x64, i5-12500H with 16 threads, 32 GB RAM).
 

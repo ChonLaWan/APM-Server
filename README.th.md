@@ -9,6 +9,8 @@
 
 พอดีเปิด XAMPP ในเครื่องมาดูเวอร์ชัน แล้วตกใจ PHP ยังเป็น 8.2.12 ตั้งแต่ปี 2023 อยู่เลย Apache 2.4.58 ส่วน MariaDB 10.4 ก็หมดซัพพอร์ตไปแล้ว ช่องโหว่ที่ upstream แก้ไปนานแล้วยังค้างอยู่ในเครื่องผมครบทุกตัว รอ XAMPP ออกรุ่นใหม่ก็ไม่รู้จะมาเมื่อไหร่ ผมเลยตัดสินใจคอมไพล์เองทั้งชุด ตั้งชื่อว่า APM มาจาก Apache PHP MariaDB นี่แหละครับ
 
+แล้วก็มาเจอของจริงพอดี [php2shell CVE-2026-109618 / 109619](https://www.linuxthai.org/article/php2shell-cve-2026-109618-109619-patch-now) เป็นช่องโหว่ RCE ของ PHP ระดับวิกฤต CVSS 9.2 แถม exploit ออกมาแล้วด้วย รุ่นที่แก้คือ 8.5.12 / 8.4.27 / 8.3.36 / 8.2.35 ตัว APM 1.0.0 ใช้ 8.4.27 ผม build ตามหลังวันที่แพตช์ออกแค่วันเดียว ถ้ารอ XAMPP คงยังโดนอยู่หละ
+
 ตอบแบบฟันธงเลยว่า ถ้าต้องใช้ PHP บน Windows แล้วอยากได้ security patch ทันวัน ต้องคอมไพล์เองเท่านั้น รอแพ็กสำเร็จรูปไม่ทันแน่นอน เวอร์ชันทุกตัวผมล็อกไว้ใน [versions.json](versions.json) ไฟล์เดียว มี patch ใหม่ออกมาก็แก้เลขเวอร์ชัน สั่ง `build.cmd` ก็ได้ zip ชุดใหม่ ส่วน extension กับ module ผมตั้งให้ตรงกับเครื่อง production (Linux) ที่ใช้จริง เขียนโค้ดบนเครื่องตัวเองผ่าน ขึ้น server ก็ผ่านด้วย
 
 **ที่อยู่ในรุ่น 1.0.0**
@@ -100,6 +102,10 @@ APM\
 ฝั่งรีโปผมกันข้อมูลหลุดไว้ 2 ชั้น
 - [scripts/check-leaks.ps1](scripts/check-leaks.ps1) ทำงานเป็น pre-commit hook (สั่ง `git config core.hooksPath .githooks`) ตัวนี้ดักทั้ง key, token, password และ path ส่วนตัว ส่วนคำเฉพาะ เช่น ชื่อ server ภายใน เก็บไว้ใน `private/leak-terms.txt` ที่ไม่ขึ้น git
 - ทุกครั้งที่ push จะมี [.github/workflows/security.yml](.github/workflows/security.yml) สแกนซ้ำด้วย gitleaks อีกรอบ
+
+**บทความที่เขียนไว้บน LinuxThai**
+- [Build APM บน Windows: สารบัญ](https://www.linuxthai.org/article/apm-build-windows-index) ซีรีส์ 7 ตอน พาคอมไพล์ Apache 2.4.69, PHP 8.4.27 และ MariaDB 11.8.9 บน Windows 11 เอง มีบอกเวลา พื้นที่ดิสก์ และทางลัดสามคำสั่ง
+- [PHP มีช่องโหว่ RCE ระดับวิกฤตสองตัว (php2shell) อัปเดตด่วนวันนี้](https://www.linuxthai.org/article/php2shell-cve-2026-109618-109619-patch-now) ต้นเหตุที่ต้องรีบออก release นี้ มีวิธีเช็กเวอร์ชันกับวิธีอัปเดตทั้ง Debian, RHEL, control panel ของ hosting, Docker และ Windows
 
 **จะ build เองจาก source** ตามคู่มือนี้ได้เลย [HOWTO-BUILD.md](HOWTO-BUILD.md) ผมเขียนไว้ทุกขั้น คำสั่ง ผลลัพธ์จริง และปัญหาที่เจอทุกข้อพร้อมวิธีแก้ (ภาษาอังกฤษอยู่ที่ [HOWTO-BUILD.en.md](HOWTO-BUILD.en.md))
 

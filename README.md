@@ -21,6 +21,8 @@ APM is a portable XAMPP-style web stack for Windows x64. Every engine is **compi
 
 XAMPP ships updates slowly. The machine this project started on still had PHP 8.2.12 (2023), Apache 2.4.58 and an end-of-life MariaDB 10.4. Each of these has security fixes that landed upstream long ago.
 
+A real example is the **php2shell** pair, [CVE-2026-109618 / CVE-2026-109619](https://www.linuxthai.org/article/php2shell-cve-2026-109618-109619-patch-now): critical PHP remote code execution (CVSS 9.2) with a public exploit, fixed in PHP 8.5.12 / **8.4.27** / 8.3.36 / 8.2.35. APM 1.0.0 ships 8.4.27, built the day after the fix came out.
+
 APM pins every version in one file, [versions.json](versions.json). Bump a version and run `build.cmd`, and you get a new zip. The extension and module set matches a real Linux production server, so code that works on APM works there.
 
 ## Use it (portable)
@@ -102,6 +104,11 @@ This is the same set as the Linux production server, minus `posix sysvmsg sysvse
   - [scripts/check-leaks.ps1](scripts/check-leaks.ps1) runs as a pre-commit hook (`git config core.hooksPath .githooks`).
   - [.github/workflows/security.yml](.github/workflows/security.yml) runs it plus gitleaks on every push.
   - Private terms live in a gitignored `private/leak-terms.txt`.
+
+## Articles (LinuxThai, Thai)
+
+- [Build APM on Windows - series index](https://www.linuxthai.org/article/apm-build-windows-index): a 7-part walkthrough of compiling Apache 2.4.69, PHP 8.4.27 and MariaDB 11.8.9 from source on Windows 11, with time and disk estimates and the three-command shortcut.
+- [php2shell: CVE-2026-109618 / 109619, patch now](https://www.linuxthai.org/article/php2shell-cve-2026-109618-109619-patch-now): the PHP RCE pair behind this release, with version checks and update steps for Debian, RHEL, hosting control panels, Docker and Windows.
 
 ## Build from source
 
