@@ -415,11 +415,11 @@ pwsh -File scripts\set-path.ps1 [-Scope User]          :: ใส่ php กั�
    - httpd/APR: ไฟล์ .sha256 ข้าง tarball บน downloads.apache.org
    - MariaDB: `https://downloads.mariadb.org/rest-api/mariadb/11.8/latest/`
 2. `pwsh -File scripts\00-fetch.ps1 -Only php` แล้ว `build.cmd -From php`
-3. ขยับ apm_version แล้ว commit, tag, push
-   ```
-   git tag v1.0.1 && git push origin v1.0.1
-   ```
-   release.yml จะ build ทดสอบ แล้วแนบ zip กับ .sha256 เข้า Release ฝั่งคนใช้แค่กด Check for updates ใน Manager
+3. ขยับ apm_version แล้ว commit และ push จากนั้นปล่อย release ได้ 2 ทาง
+   - build เองที่เครื่อง (v1.0.0 ใช้ทางนี้): สั่ง build.cmd ทดสอบ zip ให้ผ่าน แล้วสร้าง release v1.0.1 บน GitHub แนบ `dist\APM-1.0.1-win64.zip` กับไฟล์ .sha256
+   - ให้ CI build: เข้า Actions → release → Run workflow แล้วใส่ release_tag = v1.0.1 ตัวนี้ผมตั้งให้กดเองเท่านั้น เพราะ build รอบแรกกิน runner Windows ราว 3-4 ชั่วโมง repo private นาทีหมดไวมาก
+
+   ฝั่งคนใช้แค่กด Check for updates ใน Manager มันจะอ่าน releases/latest แล้วหยิบไฟล์ APM-*-win64.zip กับ .sha256 มาเอง
 
 กรณีพิเศษ
 - OpenSSL ของ Apache แก้ที่ ports-overlay\openssl\vcpkg.json (เวอร์ชัน) กับ portfile.cmake (SHA512 ของ tarball บน GitHub) แล้ว `-From vcpkg`

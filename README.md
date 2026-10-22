@@ -112,10 +112,12 @@ build.cmd     :: fetch -> vcpkg libs -> Apache -> MariaDB -> ImageMagick -> PHP 
 deploy.cmd    :: install stage\ into C:\APM on the build machine
 ```
 
-CI: pushing a tag `v*` makes [.github/workflows/release.yml](.github/workflows/release.yml) do three things:
+CI: [.github/workflows/release.yml](.github/workflows/release.yml) is a manual run (Actions → release → Run workflow). It does three things:
 1. build the whole stack on a Windows runner,
 2. smoke-test the zip (setup, start, request a page through PHP + MariaDB, stop),
-3. attach the zip to the GitHub Release.
+3. with a `release_tag`, attach the zip to that GitHub Release.
+
+[security.yml](.github/workflows/security.yml) runs the leak scan on every push.
 
 ## Versioning
 

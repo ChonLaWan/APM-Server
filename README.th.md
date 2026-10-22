@@ -108,10 +108,12 @@ build.cmd     :: fetch -> lib ของ vcpkg -> Apache -> MariaDB -> ImageMagic
 deploy.cmd    :: ติดตั้ง stage\ ลง C:\APM บนเครื่องที่ build
 ```
 
-push tag `v*` ขึ้นไปแล้ว [.github/workflows/release.yml](.github/workflows/release.yml) จะทำให้ 3 อย่าง
+ฝั่ง CI ตัว [.github/workflows/release.yml](.github/workflows/release.yml) ตั้งให้กดรันเองที่ Actions → release → Run workflow มันทำให้ 3 อย่าง
 1. build ทั้งชุดบน Windows runner
 2. แตก zip แล้วลอง setup → start → เปิดหน้าเว็บผ่าน PHP + MariaDB → stop
-3. แนบ zip เข้า Release
+3. ถ้าใส่ release_tag มาด้วย จะแนบ zip เข้า Release นั้นให้
+
+ที่ไม่ตั้งให้รันเองอัตโนมัติ เพราะ build รอบแรกกินเวลาราว 3-4 ชั่วโมง ส่วนการสแกนข้อมูลหลุดรันทุกครั้งที่ push
 
 **เลขเวอร์ชัน** เป็นรูปแบบ `<version> build <n> (<commit>, <date>)` เช่น `1.0.0 build 3 (7a106aa, 2026-10-22)`
 - build คือจำนวน commit ใน git

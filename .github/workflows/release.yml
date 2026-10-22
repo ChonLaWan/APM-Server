@@ -1,14 +1,17 @@
-# Build the whole APM stack from source on a Windows runner and publish the portable zip as a release.
-#   - push a tag v*  -> build + GitHub Release with APM-<ver>-win64.zip (+ .sha256)
-#   - manual run     -> build + workflow artifact only (no release)
-# A cold build takes roughly 3-4 hours on a hosted runner (vcpkg, ImageMagick and MariaDB dominate);
-# the vcpkg binary cache and the ImageMagick checkout are cached between runs.
+# Build the whole APM stack from source on a Windows runner and (optionally) publish the portable zip.
+# Manual only (Actions tab -> release -> Run workflow): a cold build takes roughly 3-4 hours on a hosted
+# runner, and Windows minutes count double on private repos, so it never runs by itself.
+#   release_tag empty  -> build + smoke test + workflow artifact
+#   release_tag v1.2.3 -> also create/update that GitHub Release with APM-<ver>-win64.zip (+ .sha256)
 name: release
 
 on:
-  push:
-    tags: ['v*']
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Publish to this release tag (e.g. v1.0.1); leave empty for a test build'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -69,9 +72,10 @@ jobs:
             dist/APM-*-win64.zip.sha256
 
       - name: Publish release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: inputs.release_tag != ''
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ inputs.release_tag }}
           files: |
             dist/APM-*-win64.zip
             dist/APM-*-win64.zip.sha256

@@ -436,11 +436,11 @@ pwsh -File scripts\set-path.ps1 [-Scope User]          :: php + mysql on PATH fo
    - httpd/APR: the `.sha256` next to each tarball on downloads.apache.org
    - MariaDB: `https://downloads.mariadb.org/rest-api/mariadb/11.8/latest/`
 2. `pwsh -File scripts\00-fetch.ps1 -Only php`, then rebuild from that step: `build.cmd -From php`.
-3. Bump `apm_version`, commit, tag and push:
-   ```
-   git tag v1.0.1 && git push origin v1.0.1
-   ```
-   [release.yml](.github/workflows/release.yml) then builds, smoke-tests and publishes the zip and its `.sha256`. Users press **Check for updates** in APM Manager.
+3. Bump `apm_version`, commit and push. Then publish in one of two ways:
+   - **Local build (what v1.0.0 used):** `build.cmd`, test the zip, then create the release `v1.0.1` on GitHub and attach `dist\APM-1.0.1-win64.zip` and its `.sha256`.
+   - **CI build:** Actions → release → Run workflow, with `release_tag` = `v1.0.1`. [release.yml](.github/workflows/release.yml) builds, smoke-tests and publishes. It is manual only, because a cold build takes 3-4 hours of Windows runner time.
+
+   Users then press **Check for updates** in APM Manager. It reads `releases/latest` and picks the `APM-*-win64.zip` asset plus its `.sha256`.
 
 Special cases:
 
